@@ -36,17 +36,13 @@ public class DownloadService {
             command.add(yt_tool);
             command.add("--no-playlist");
 
-            command.add("--js-runtimes");
-            command.add("node");
+            // --- VŨ KHÍ TỐI THƯỢNG: ĐÓNG GIẢ IPHONE VÀ SMART TV ---
+            // (Đánh lừa YouTube để bỏ qua bước kiểm tra JavaScript và CAPTCHA)
+            command.add("--extractor-args");
+            command.add("youtube:player_client=ios,tv");
+            System.out.println("Đã kích hoạt chế độ giả danh iOS và Smart TV!");
 
-            File cookieFile = new File(System.getProperty("user.dir") + "/cookies.txt");
-            if(cookieFile.exists()) {
-                command.add("--cookies"); 
-                command.add(cookieFile.getAbsolutePath());
-                System.out.println("Đã nạp Cookies thành công!");
-            } else {
-                System.out.println("CẢNH BÁO: Không tìm thấy file cookies.txt!");
-            }
+            // XÓA SẠCH KHÚC NẠP COOKIES VÀ NODE.JS RỒI NHA!
 
             if (formatId != null && formatId.startsWith("mp3_")) {
                 String bitrate = formatId.split("_")[1]; 
@@ -81,7 +77,7 @@ public class DownloadService {
             BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
             String line;
             while ((line = reader.readLine()) != null) {
-                System.out.println(line); // Giờ thì có log rồi nè
+                System.out.println(line); 
                 
                 if (line.contains("[download]") && line.contains("%")) {
                     try {
