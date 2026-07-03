@@ -16,6 +16,8 @@ WORKDIR /app
 # 5. Copy toàn bộ code từ máy tính của ông vào trong Docker
 COPY . .
 
+RUN chmod +x mvnw
+
 # 6. Ra lệnh cho Maven build code thành file .jar
 RUN ./mvnw clean package -DskipTests
 
