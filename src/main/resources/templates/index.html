@@ -4,116 +4,268 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tải Video YouTube</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        .preview-card {
-            transition: all 0.3s ease-in-out;
-        }
-    </style>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    
+<style>
+body {
+    font-family: 'Oswald', sans-serif;
+    background: linear-gradient(135deg, #0f172a, #1e293b, #334155);
+    min-height: 100vh;
+}
+.main-card {
+    background: rgba(255,255,255,.96);
+    backdrop-filter: blur(10px);
+}
+.hero-icon {
+    font-size: 60px;
+    color: #ff0033;
+}
+.preview-card { transition: all .3s ease-in-out; }
+.options-box {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 16px;
+    padding: 18px;
+    /* Tui bỏ cái margin-bottom ở đây đi để tránh bị Margin Collapse */
+}
+#youtubeLink { border-radius: 14px; }
+#downloadBtn { border-radius: 14px; letter-spacing: 1px; }
+.footer-copy {
+    text-align: center;
+    margin-top: 18px;
+    color: #94a3b8;
+    font-size: 13px;
+    letter-spacing: 2px;
+}
+.toast-custom {
+    position: fixed;
+    bottom: 20px;
+    right: -350px;
+    width: 300px;
+    background: #198754;
+    color: white;
+    padding: 15px 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,.15);
+    transition: right .5s ease-in-out;
+    z-index: 1050;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.toast-custom.show { right: 20px; }
+</style>
+
 </head>
-<body class="bg-light d-flex align-items-center min-vh-100">
+<body class="bg-light d-flex align-items-center min-vh-100 mt-5 mb-5">
 
     <div class="container">
-        <div class="card shadow-lg mx-auto border-0 rounded-4" style="max-width: 600px;">
-            <div class="card-body p-5">
-                <h3 class="card-title text-center mb-4 fw-bold text-danger">
-                    <i class="bi bi-youtube"></i> YT Downloader
-                </h3>
+        <div class="card main-card shadow-lg mx-auto border-0 rounded-5" style="max-width: 720px;">
+            <div class="card-body pt-3 pb-3 ps-5 pe-5">
+                <div class="text-center mb-4">
+                    <div class="hero-icon"><i class="bi bi-youtube"></i></div>
+                    <h2 class="fw-bold mb-1">YouTube Downloader</h2>
+                    <p class="text-secondary mb-0">Tải video và âm thanh nhanh chóng</p>
+                </div>
 
                 <div class="mb-4">
-                    <input type="url" id="youtubeLink" class="form-control form-control-lg text-center" 
+                    <input type="url" id="youtubeLink" class="form-control form-control-lg text-center shadow-sm" 
                            placeholder="Dán link YouTube vào đây...">
                 </div>
 
                 <div id="previewSection" class="d-none preview-card">
-                    <div class="card mb-4 border-0">
-                        <img id="videoThumbnail" src="" class="card-img-top rounded-3 shadow-sm" alt="Thumbnail">
-                        <div class="card-body px-0 text-center">
-                            <h5 id="videoTitle" class="card-title fw-semibold mt-2">Tiêu đề video</h5>
+                    <div class="card mb-3 border-0 bg-transparent">
+                        <img id="videoThumbnail" src="" class="card-img-top rounded-3 shadow-sm mx-auto" alt="Thumbnail">
+                        <div class="card-body px-0 text-center pb-0">
+                            <h6 id="videoTitle" class="card-title fw-bold mt-2 text-truncate text-secondary">Tiêu đề video</h6>
                         </div>
                     </div>
 
-                    <div class="row g-2">
-                        <div class="col-sm-8">
-                            <select class="form-select form-select-lg" id="formatSelect">
-                                <option value="mp4_1080">MP4 - 1080p</option>
-                                <option value="mp4_720" selected>MP4 - 720p (Khuyên dùng)</option>
-                                <option value="mp3">MP3 - Audio (320kbps)</option>
-                            </select>
-                        </div>
-                        <div class="col-sm-4">
-                            <button class="btn btn-danger w-100 btn-lg" id="downloadBtn">
-                                Tải Về
-                            </button>
+                    <div class="options-box border shadow-sm">
+                        <div class="row g-3">
+                            <div class="col-md-5">
+                                <label class="form-label fw-semibold text-secondary small">Loại File</label>
+                                <select class="form-select" id="fileTypeSelect">
+                                    <option value="mp4" selected>Video (MP4)</option>
+                                    <option value="mp3">Âm thanh (MP3)</option>
+                                </select>
+                            </div>
+                            <div class="col-md-7">
+                                <label class="form-label fw-semibold text-secondary small">Chất lượng</label>
+                                <select class="form-select" id="qualitySelect"></select>
+                            </div>
                         </div>
                     </div>
+
+                    <div id="progressContainer" class="d-none mb-3 mt-4">
+                        <div class="d-flex justify-content-between small fw-bold mb-1">
+                            <span class="text-secondary">Đang tải xuống vui lòng chờ tí...</span>
+                            <span id="progressText" class="text-danger">0%</span>
+                        </div>
+                        <div class="progress" style="height: 10px;">
+                            <div id="progressBar" class="progress-bar bg-danger progress-bar-striped progress-bar-animated" style="width: 0%"></div>
+                        </div>
+                    </div>
+
+                    <button class="btn btn-danger w-100 btn-lg shadow fw-bold mt-2" id="downloadBtn">
+                        TẢI VỀ NGAY
+                    </button>
                 </div>
-
+                <div class="footer-copy">COPY NO RIGHT © MHOANG</div>
             </div>
         </div>
     </div>
 
+    <div id="successToast" class="toast-custom">
+        <i class="bi bi-check-circle-fill fs-4"></i>
+        <div>
+            <strong>Thành công!</strong><br>
+            <span class="small">File đã sẵn sàng để lưu vào máy.</span>
+        </div>
+    </div>
+
     <script>
-        // --- PHẦN 1: KHAI BÁO CÁC PHẦN TỬ TRÊN GIAO DIỆN ---
         const linkInput = document.getElementById('youtubeLink');
         const previewSection = document.getElementById('previewSection');
         const thumbnail = document.getElementById('videoThumbnail');
         const title = document.getElementById('videoTitle');
         const downloadBtn = document.getElementById('downloadBtn');
+        const fileTypeSelect = document.getElementById('fileTypeSelect');
+        const qualitySelect = document.getElementById('qualitySelect');
+        
+        const progressContainer = document.getElementById('progressContainer');
+        const progressBar = document.getElementById('progressBar');
+        const progressText = document.getElementById('progressText');
+        const successToast = document.getElementById('successToast');
 
-        // --- PHẦN 2: LOGIC HIỆN THUMBNAIL KHI DÁN LINK ---
+        const qualityOptions = {
+            mp4: [
+                { value: "mp4_1080", text: "MP4 - 1080p (Full HD)" },
+                { value: "mp4_720", text: "MP4 - 720p (HD - Khuyên dùng)" },
+                { value: "mp4_480", text: "MP4 - 480p (SD)" },
+                { value: "mp4_360", text: "MP4 - 360p" },
+                { value: "mp4_144", text: "MP4 - 144p (Thấp nhất)" }
+            ],
+            mp3: [
+                { value: "mp3_320", text: "MP3 - 320 kbps (Chất lượng cao nhất)" },
+                { value: "mp3_192", text: "MP3 - 192 kbps (Tốt)" },
+                { value: "mp3_128", text: "MP3 - 128 kbps (Tiêu chuẩn)" }
+            ]
+        };
+
+        function updateQualityOptions() {
+            const selectedType = fileTypeSelect.value;
+            const options = qualityOptions[selectedType];
+            qualitySelect.innerHTML = '';
+            options.forEach(opt => {
+                const newOption = document.createElement('option');
+                newOption.value = opt.value;
+                newOption.text = opt.text;
+                if (opt.value === 'mp4_720' || opt.value === 'mp3_128') newOption.selected = true;
+                qualitySelect.appendChild(newOption);
+            });
+        }
+        fileTypeSelect.addEventListener('change', updateQualityOptions);
+        updateQualityOptions();
+
         linkInput.addEventListener('input', function() {
             const url = this.value.trim();
-            
             if (url.includes('youtube.com') || url.includes('youtu.be')) {
-                // Tạm thời hardcode data để test giao diện
-                thumbnail.src = 'https://img.youtube.com/vi/dQw4w9WgXcQ/maxresdefault.jpg';
-                title.innerText = 'Rick Astley - Never Gonna Give You Up (Official Music Video)';
-                
-                // Hiện khu vực preview
                 previewSection.classList.remove('d-none');
+                title.innerText = 'Đang tải thông tin...';
+                thumbnail.src = 'https://via.placeholder.com/640x360.png?text=Loading...';
+
+                fetch('/api/info?url=' + encodeURIComponent(url))
+                    .then(res => res.json())
+                    .then(data => {
+                        title.innerText = data.title;
+                        thumbnail.src = data.thumbnail;
+                    }).catch(() => title.innerText = 'Sẵn sàng tải');
             } else if (url === '') {
                 previewSection.classList.add('d-none');
             }
         });
 
-        // --- PHẦN 3: LOGIC GỬI LINK XUỐNG SPRING BOOT ĐỂ TẢI ---
+        function showToast() {
+            successToast.classList.add('show');
+            setTimeout(() => {
+                successToast.classList.remove('show');
+            }, 3000);
+        }
+
         downloadBtn.addEventListener('click', function() {
             const url = linkInput.value.trim();
-            
-            if (!url) {
-                alert('Ê, chưa dán link YouTube kìa!');
-                return;
-            }
+            if (!url) return alert('Ê, chưa dán link YouTube kìa!');
 
-            // Hiệu ứng loading cho nút bấm
-            const originalText = downloadBtn.innerHTML;
-            downloadBtn.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Đang tải ngầm...';
+            const taskId = 'task_' + Date.now();
+
             downloadBtn.disabled = true;
+            downloadBtn.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Đang xử lý...';
+            
+            progressContainer.classList.remove('d-none');
+            progressBar.style.width = '0%';
+            progressText.innerText = '0%';
+
+            const intervalId = setInterval(() => {
+                fetch('/api/progress?taskId=' + taskId)
+                    .then(res => res.text())
+                    .then(percent => {
+                        if (percent !== "0") {
+                            progressBar.style.width = percent + '%';
+                            progressText.innerText = percent + '%';
+                        }
+                    });
+            }, 500);
 
             const formData = new URLSearchParams();
             formData.append('url', url);
+            formData.append('format', qualitySelect.value);
+            formData.append('taskId', taskId);
 
-            // Bắn request xuống API của Spring Boot
             fetch('/api/download', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded'
-                },
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
                 body: formData
             })
-            .then(response => response.text())
-            .then(data => {
-                alert(data + "\n\nHãy mở thư mục Downloads của máy tính lên và đợi một chút để xem thành quả nhé!");
+            .then(response => {
+                if (!response.ok) throw new Error('Lỗi server');
+                
+                const disposition = response.headers.get('Content-Disposition');
+                let filename = 'video.mp4';
+                if (disposition && disposition.indexOf('filename=') !== -1) {
+                    const matches = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/.exec(disposition);
+                    if (matches != null && matches[1]) filename = decodeURIComponent(matches[1].replace(/['"]/g, ''));
+                }
+                return response.blob().then(blob => ({ blob, filename }));
             })
-            .catch(error => {
-                console.error('Lỗi rồi:', error);
-                alert('Có lỗi mạng hoặc server khi kết nối!');
+            .then(({ blob, filename }) => {
+                progressBar.style.width = '100%';
+                progressText.innerText = '100%';
+
+                showToast();
+
+                const urlObj = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.style.display = 'none';
+                a.href = urlObj;
+                a.download = filename;
+                document.body.appendChild(a);
+                a.click();
+                window.URL.revokeObjectURL(urlObj);
+                document.body.removeChild(a);
             })
+            .catch(error => alert('Có lỗi xảy ra khi tải!'))
             .finally(() => {
-                // Trả nút về trạng thái ban đầu
-                downloadBtn.innerHTML = originalText;
+                clearInterval(intervalId);
+                downloadBtn.innerHTML = 'TẢI VỀ NGAY';
                 downloadBtn.disabled = false;
+                setTimeout(() => { progressContainer.classList.add('d-none'); }, 2000);
             });
         });
     </script>
