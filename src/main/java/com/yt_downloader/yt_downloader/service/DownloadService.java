@@ -36,6 +36,9 @@ public class DownloadService {
             command.add(yt_tool);
             command.add("--no-playlist");
 
+            command.add("--js-runtimes");
+            command.add("node");
+
             File cookieFile = new File(System.getProperty("user.dir") + "/cookies.txt");
             if(cookieFile.exists()) {
                 command.add("--cookies"); 
