@@ -1,5 +1,5 @@
 # 1. Bắt đầu từ một máy tính Linux có cài sẵn Java 21 (Giống bản Java ông đang xài)
-FROM eclipse-temurin:21-jdk-jammy
+FROM eclipse-temurin:21-jdk-noble
 
 # 2. Cài đặt Python, FFmpeg và NodeJS
 RUN apt-get update && \
