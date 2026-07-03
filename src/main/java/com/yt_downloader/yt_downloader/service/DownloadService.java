@@ -39,9 +39,6 @@ public class DownloadService {
             command.add("--js-runtimes");
             command.add("node");
 
-            command.add("--extractor-args");
-            command.add("youtube:player_client=android");
-
             File cookieFile = new File(System.getProperty("user.dir") + "/cookies.txt");
             if(cookieFile.exists()) {
                 command.add("--cookies"); 
