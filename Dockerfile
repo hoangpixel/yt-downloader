@@ -6,8 +6,8 @@ RUN apt-get update && \
     apt-get install -y ffmpeg python3 python3-pip curl nodejs && \
     rm -rf /var/lib/apt/lists/*
 
-# 3. Tải yt-dlp bản chính thức dành cho Linux và cấp quyền chạy cho nó
-RUN curl -L https://github.com/yt-dlp/yt-dlp/releases/download/nightly/yt-dlp -o /usr/local/bin/yt-dlp && \
+# 3. Tải yt-dlp bản NIGHTLY từ kho chính thức để chống lại thuật toán mới của YouTube
+RUN curl -L https://github.com/yt-dlp/yt-dlp-nightly-builds/releases/latest/download/yt-dlp -o /usr/local/bin/yt-dlp && \
     chmod a+rx /usr/local/bin/yt-dlp
 
 # 4. Tạo thư mục làm việc cho web của ông trong máy tính Linux
