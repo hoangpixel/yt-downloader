@@ -21,7 +21,7 @@ public class DownloadService {
         progressMap.put(taskId, "0");
         
         try {
-            String yt_tool = "tools/yt-dlp.exe";
+            String yt_tool = "yt-dlp";
             String tmpFolder = System.getProperty("user.dir") + "/tmp_downloads";
             new File(tmpFolder).mkdirs();
             String tienTo = System.currentTimeMillis() + "_";
