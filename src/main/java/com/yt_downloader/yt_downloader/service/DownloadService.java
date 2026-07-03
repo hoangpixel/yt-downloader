@@ -32,15 +32,24 @@ public class DownloadService {
             new File(tmpFolder).mkdirs();
             String tienTo = System.currentTimeMillis() + "_";
 
-            List<String> command = new ArrayList<>();
+List<String> command = new ArrayList<>();
             command.add(yt_tool);
             command.add("--no-playlist");
 
-            // --- VŨ KHÍ TỐI THƯỢNG: ĐÓNG GIẢ IPHONE VÀ SMART TV ---
-            // (Đánh lừa YouTube để bỏ qua bước kiểm tra JavaScript và CAPTCHA)
-            command.add("--extractor-args");
-            command.add("youtube:player_client=ios,tv");
-            System.out.println("Đã kích hoạt chế độ giả danh iOS và Smart TV!");
+            command.add("--user-agent");
+            command.add("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36");
+
+            // // --- BÀI TẨY MỚI: QUAY VỀ DÙNG COOKIES TRÌNH DUYỆT THẬT ---
+            // // Đừng giả danh iOS hay TV nữa, hãy dùng chính cookies để làm "người thật"
+            // File cookieFile = new File(System.getProperty("user.dir") + "/cookies.txt");
+            // if(cookieFile.exists()) {
+            //     command.add("--cookies"); 
+            //     command.add(cookieFile.getAbsolutePath());
+            // }
+
+            // --- GIẢI MÃ BẰNG NODE.JS ---
+            command.add("--js-runtimes");
+            command.add("node");
 
             // XÓA SẠCH KHÚC NẠP COOKIES VÀ NODE.JS RỒI NHA!
 
