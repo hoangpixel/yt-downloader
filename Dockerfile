@@ -7,7 +7,7 @@ RUN apt-get update && \
     rm -rf /var/lib/apt/lists/*
 
 # 3. Tải yt-dlp bản chính thức dành cho Linux và cấp quyền chạy cho nó
-RUN curl -L https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp -o /usr/local/bin/yt-dlp && \
+RUN curl -L https://github.com/yt-dlp/yt-dlp/releases/download/nightly/yt-dlp -o /usr/local/bin/yt-dlp && \
     chmod a+rx /usr/local/bin/yt-dlp
 
 # 4. Tạo thư mục làm việc cho web của ông trong máy tính Linux
