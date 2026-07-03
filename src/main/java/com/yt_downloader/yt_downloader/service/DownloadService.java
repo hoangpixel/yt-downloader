@@ -36,6 +36,15 @@ public class DownloadService {
             command.add(yt_tool);
             command.add("--no-playlist");
 
+            File cookieFile = new File(System.getProperty("user.dir") + "/cookies.txt");
+            if(cookieFile.exists()) {
+                command.add("--cookies"); 
+                command.add(cookieFile.getAbsolutePath());
+                System.out.println("Đã nạp Cookies thành công!");
+            } else {
+                System.out.println("CẢNH BÁO: Không tìm thấy file cookies.txt!");
+            }
+
             if (formatId != null && formatId.startsWith("mp3_")) {
                 String bitrate = formatId.split("_")[1]; 
                 command.add("-x"); 

@@ -1,9 +1,9 @@
 # 1. Bắt đầu từ một máy tính Linux có cài sẵn Java 21 (Giống bản Java ông đang xài)
 FROM eclipse-temurin:21-jdk-jammy
 
-# 2. Cài đặt Python (cần cho yt-dlp) và FFmpeg để ghép hình/tiếng
+# 2. Cài đặt Python, FFmpeg và NodeJS
 RUN apt-get update && \
-    apt-get install -y ffmpeg python3 python3-pip curl && \
+    apt-get install -y ffmpeg python3 python3-pip curl nodejs && \
     rm -rf /var/lib/apt/lists/*
 
 # 3. Tải yt-dlp bản chính thức dành cho Linux và cấp quyền chạy cho nó
