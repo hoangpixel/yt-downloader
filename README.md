@@ -32,7 +32,8 @@ Trước khi chạy dự án, hãy đảm bảo hệ thống đã cài sẵn:
 - JDK 21
 - Node.js
 - Maven hoặc Maven Wrapper
-- Tệp thực thi yt-dlp đặt tại thư mục tools
+- Tệp thực thi yt-dlp.exe và ffmpeg.exe phải có mặt trong thư mục tools; nếu thiếu thì ứng dụng sẽ không chạy được.
+- Có thể tải ffmpeg.exe tại: https://www.ffmpeg.org/download.html
 
 ## Cài đặt và chạy locally
 
